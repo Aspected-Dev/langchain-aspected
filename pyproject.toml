@@ -1,0 +1,71 @@
+[project]
+name = "langchain-aspected"
+description = "LangChain integration for the Aspected vector database"
+readme = "README.md"
+authors = [
+    { name = "mervindejong", email = "mervin.dejong@xillio.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-core>=1.6.1",
+    "aspected-client>=0.3.0",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "langchain-openai>=0.2.0",
+    "ruff>=0.8.0",
+    "testcontainers>=4.15.0",
+    "ty>=0.0.77",
+]
+
+[build-system]
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["langchain_aspected"]
+
+[tool.uv]
+exclude-newer = "1 week"
+exclude-newer-package = { aspected-client = false }
+
+[tool.ruff]
+line-length = 99
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+ignore = ["E203", "E501"]
+
+[tool.ty.src]
+include = ["langchain_aspected", "tests"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests that require a real Aspected server (deselect with '-m \"not integration\"')",
+]
+addopts = "-m 'not integration'"
